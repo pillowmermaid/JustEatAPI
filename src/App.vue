@@ -3,7 +3,7 @@
 <div class="header">
 <img class="main-logo" src="https://d3k6h8q47umtc.cloudfront.net/assets/dist/img/logos/je-logo-v2.svg">
 <div class="search-form">
-<input placeholder="Postal Code"></input>
+<input v-model="outcode" placeholder="Out Code">
 <button v-on:click="getRestaurants">
 <span class="show-desktop">Feed Me Now</span>
 <i class="show-mobile fa fa-search"></i>
@@ -38,28 +38,31 @@ export default {
   components: {Restaurant},
   data () {
     return {
+      responseCode: '',
       restaurants: [],
       isLoading: false,
+      outcode: '',
       resultMessage: ''
     }
   },
   methods: {
     getRestaurants: function () {
       let url = 'https://public.je-apis.com/restaurants?q='
-      let postalCode = document.querySelector('input').value
-      url += postalCode
+      url += this.outcode
       let self = this
       self.isLoading = true
       self.restaurants = []
       self.resultMessage = ''
       self.$http.get(url, {headers: options}).then(response => {
         self.isLoading = false
+        self.responseCode = response.status
         if (response.body['Restaurants'].length > 0) {
           self.restaurants = response.body['Restaurants']
         } else {
           self.resultMessage = 'Sorry, no restaurants found in your area :('
         }
       }, response => {
+        self.responseCode = response.status
         self.isLoading = false
         self.resultMessage = 'Error 404! :0'
       })
