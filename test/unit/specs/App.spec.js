@@ -9,7 +9,6 @@ describe('App.vue', () => {
     .to.equal('Feed Me Now')
   })
 
-
   // Meant to test the submission but returns a dumb error
   // revisit later
 
